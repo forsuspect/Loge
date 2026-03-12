@@ -2,10 +2,15 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Para o Amor da Minha Vida ❤️</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
 body{
     margin:0;
@@ -18,11 +23,66 @@ body{
     overflow:hidden;
 }
 
+/* CARTA */
+.envelope{
+    font-size:22vw;
+    cursor:pointer;
+    transition:.3s;
+    user-select:none;
+}
+
+.envelope:active{
+    transform:scale(0.9);
+}
+
+/* CARD */
+.card{
+    position:absolute;
+    width:92%;
+    max-width:420px;
+    background:#fff;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+    opacity:0;
+    transform:scale(.7);
+    transition:.6s ease;
+}
+
+.card.show{
+    opacity:1;
+    transform:scale(1);
+}
+
+h1{
+    color:#ff4d6d;
+    font-size:6vw;
+}
+
+#mensagem{
+    color:#444;
+    line-height:1.5;
+    font-size:4.2vw;
+    min-height:120px;
+}
+
+.card img{
+    width:55vw;
+    max-width:200px;
+    height:55vw;
+    max-height:200px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-top:15px;
+    border:4px solid #ff4d6d;
+}
+
 /* CORAÇÕES */
 .heart{
     position:absolute;
-    color:#fff;
-    animation:fall linear infinite;
+    animation:fall linear forwards;
+    pointer-events:none;
 }
 
 @keyframes fall{
@@ -36,54 +96,11 @@ body{
     }
 }
 
-/* CARTA */
-.envelope{
-    font-size:80px;
-    cursor:pointer;
-    transition:.4s;
-}
-
-.envelope:hover{
-    transform:scale(1.1);
-}
-
-/* CARTÃO */
-.card{
-    position:absolute;
-    width:90%;
-    max-width:420px;
-    background:#fff;
-    border-radius:20px;
-    padding:25px;
-    text-align:center;
-    box-shadow:0 20px 50px rgba(0,0,0,.3);
-    opacity:0;
-    transform:scale(.5);
-    transition:.7s;
-}
-
-.card.show{
-    opacity:1;
-    transform:scale(1);
-}
-
-.card img{
-    width:190px;
-    height:190px;
-    border-radius:50%;
-    object-fit:cover;
-    margin-top:15px;
-    border:5px solid #ff4d6d;
-}
-
-h1{
-    color:#ff4d6d;
-}
-
-#mensagem{
-    color:#444;
-    line-height:1.6;
-    min-height:120px;
+/* TELAS MAIORES */
+@media(min-width:600px){
+    h1{ font-size:26px; }
+    #mensagem{ font-size:16px; }
+    .envelope{ font-size:120px; }
 }
 
 </style>
@@ -91,25 +108,24 @@ h1{
 
 <body>
 
-<!-- MUSICA -->
 <audio id="musica" loop>
     <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
-<div class="envelope" onclick="abrirCarta()">💌</div>
+<div class="envelope" id="envelope">💌</div>
 
 <div class="card" id="carta">
     <h1>Feliz Aniversário ❤️</h1>
-
     <p id="mensagem"></p>
-
-    <!-- TROCAR FOTO -->
-    <img src="foto.jpg">
+    <img src="foto.jpg" alt="amor">
 </div>
 
 <script>
 
-/* TEXTO ROMÂNTICO */
+const envelope = document.getElementById("envelope");
+const carta = document.getElementById("carta");
+const musica = document.getElementById("musica");
+
 const texto = `Feliz aniversário, meu amor!
 Hoje celebro o dia mais especial do mundo,
 porque foi o dia em que nasceu a pessoa
@@ -120,44 +136,49 @@ seu abraço é meu lugar seguro
 e seu amor é o meu maior presente.
 
 Que nossa história continue linda,
-cheia de sonhos, risadas e momentos inesquecíveis.
+cheia de sonhos e momentos inesquecíveis.
 Eu te amo hoje, amanhã e para sempre ❤️`;
 
-/* ANIMAÇÃO TEXTO */
 let i = 0;
+
 function escrever(){
     if(i < texto.length){
         document.getElementById("mensagem").innerHTML += texto.charAt(i);
         i++;
-        setTimeout(escrever,35);
+        setTimeout(escrever,30);
     }
 }
 
-/* ABRIR CARTA */
+/* FUNÇÃO ABRIR */
 function abrirCarta(){
-    document.querySelector(".envelope").style.display="none";
-    document.getElementById("carta").classList.add("show");
 
-    document.getElementById("musica").play();
+    envelope.style.display="none";
+    carta.classList.add("show");
+
+    musica.play().catch(()=>{});
     escrever();
 }
 
-/* CORAÇÕES CAINDO */
+/* CLIQUE + TOQUE MOBILE */
+envelope.addEventListener("click", abrirCarta);
+envelope.addEventListener("touchstart", abrirCarta);
+
+/* CORAÇÕES OTIMIZADOS */
 function criarCoracao(){
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
+    const heart=document.createElement("div");
+    heart.className="heart";
     heart.innerHTML="❤️";
 
     heart.style.left=Math.random()*100+"vw";
-    heart.style.fontSize=(15+Math.random()*25)+"px";
-    heart.style.animationDuration=(3+Math.random()*4)+"s";
+    heart.style.fontSize=(14+Math.random()*20)+"px";
+    heart.style.animationDuration=(4+Math.random()*3)+"s";
 
     document.body.appendChild(heart);
 
     setTimeout(()=>heart.remove(),7000);
 }
 
-setInterval(criarCoracao,300);
+setInterval(criarCoracao,450);
 
 </script>
 
